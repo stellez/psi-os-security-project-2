@@ -469,17 +469,46 @@ contraseña: PsiOS2023
 Bastion
 ```
 usuario: admin
-contraseña: PsiOS2023
+contraseña: PsiOS2023bastion
 ```
 Web
 ```
 usuario: admin
-contraseña: PsiOS2023
+contraseña: PsiOS2023web
 ```
 Base de Datos
 ```
 usuario: admin
-contraseña: PsiOS2023
+contraseña: PsiOS2023db
+```
+
+Usuarios y grupos
+
+Grupo administrators 
+```
+usuario: adm01
+contraseña: psi-adm-01
+
+usuario: adm02
+contraseña: psi-adm-02
+```
+
+Grupo webmasters 
+```
+usuario: web01
+contraseña: psi-web-01
+
+usuario: web02
+contraseña: psi-web-02
+```
+
+Grupo databaseadmins
+```
+usuario: dba01
+contraseña: psi-dba-01
+
+usuario: dba02
+contraseña: psi-dba-02
 ```
 
 ___
