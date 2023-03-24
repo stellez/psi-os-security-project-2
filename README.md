@@ -108,6 +108,23 @@ sudo usermod -a -G administrators adm02
 ```
 ___
 
+Para automatizar la creación de estos grupos y usuarios, puede ejecutar un script, para esto es necesario instalar git.
+```
+sudo apt-get update
+sudo apt-get install git
+```
+
+Luego de instalado el servicio, clonar el siguiente repositorio
+```
+git clone https://github.com/stellez/psi-os-security-project-2.git
+```
+Entrar a la carpeta de scripts, darle permisos y ejecutar el script `crear-usuarios.sh`
+```
+cd scripts
+sudo chmod 760 crear-usuarios.sh
+./crear-usuarios.sh
+```
+
 ### Instalación de SSH
 
 Utilizando el usuario `admin`.
