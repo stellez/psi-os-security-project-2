@@ -33,7 +33,6 @@ ___
 - [**Anexos**](#anexos)
 
 
-
 ## **Introducción**
 
 ___
@@ -108,6 +107,23 @@ sudo usermod -a -G administrators adm01
 sudo usermod -a -G administrators adm02
 ```
 ___
+
+Para automatizar la creación de estos grupos y usuarios, puede ejecutar un script, para esto es necesario instalar git.
+```
+sudo apt-get update
+sudo apt-get install git
+```
+
+Luego de instalado el servicio, clonar el siguiente repositorio
+```
+git clone https://github.com/stellez/psi-os-security-project-2.git
+```
+Entrar a la carpeta de scripts, darle permisos y ejecutar el script `crear-usuarios.sh`
+```
+cd scripts
+sudo chmod 760 crear-usuarios.sh
+./crear-usuarios.sh
+```
 
 ### Instalación de SSH
 
@@ -378,7 +394,7 @@ Navegar hasta encontrar el comentario `#Allow members of group sudo to execute a
 
 Crear una variable para almacenar las acciones que podrán ejecutarse sobre el servicio Apache.
 ```
-Cmnd_Alias APACHE_SERVICE = /etc/systemctl start {apache-service?},/etc/systemctl restart {apache-service?},/etc/systemctl stop {apache-service?},/etc/systemctl status {apache-service?}
+Cmnd_Alias APACHE_SERVICE = /etc/systemctl start apache2,/etc/systemctl restart apache2,/etc/systemctl stop apache2,/etc/systemctl status apache2
 ```
 En la siguiente línea, agregar el grupo de usuarios que podrá ejecutar las acciones configuradas.
 ```
@@ -395,7 +411,7 @@ Navegar hasta encontrar el comentario `#Allow members of group sudo to execute a
 
 Crear una variable para almacenar las acciones que podrán ejecutarse sobre el servicio Apache.
 ```
-Cmnd_Alias MYSQL_SERVICE = /etc/systemctl start {mysql-service?},/etc/systemctl restart {mysql-service?},/etc/systemctl stop {mysql-service?},/etc/systemctl status {mysql-service?}
+Cmnd_Alias MYSQL_SERVICE = /etc/systemctl start mysql,/etc/systemctl restart mysql,/etc/systemctl stop mysql,/etc/systemctl status mysql
 ```
 En la siguiente línea, agregar el grupo de usuarios que podrá ejecutar las acciones configuradas.
 ```
@@ -408,7 +424,7 @@ Al estar logueado con un usuario del respectivo grupo y ejecutar la acción al s
 
 Por ejemplo para reiniciar el servicio de apache con un usuario del grupo webmasters.
 ```
-sudo systemctl restart {apache-service?}
+sudo systemctl restart apache2
 ```
 ___
 ### Configuración de Firewall
@@ -449,6 +465,11 @@ Permitimos conexión al servidor por SSH únicamente al equipo Bastion.
 ```
 sudo ufw allow from 10.0.0.1 to any port 22
 ```
+Permitimos el acceso al servicio de base de datos únicamente desde el servidor web.
+```
+sudo ufw allow mysql from 10.0.0.2
+```
+
 
 ___
 ## **Personalización** 
