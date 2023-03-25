@@ -109,8 +109,11 @@ Se deben crear los siguientes 4 equipos con los nombres de servidor, usuario y c
 Para los equipos `Bastion` y `Web` debe crearse un segundo adaptador de red durante la creación del equipo. Cuando se configure los recursos de la máquina.
 
 Clic botón Add.
+
 ![](img/new-adapter-1.png)
+
 Seleccionar Network Adapter.
+
 ![](img/new-adapter-2.png)
 
 Unav vez creados los equipos, proceder a realizar la siguiente configuración por cada equipo.
