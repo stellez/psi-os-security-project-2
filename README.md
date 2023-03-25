@@ -25,6 +25,7 @@ ___
   - [Creación de grupos](#creación-de-grupos)
   - [Instalación de SSH](#instalación-de-ssh)
   - [Autenticación con SSH llave pública y privada](#autenticación-con-ssh-llave-pública-y-privada)
+    - [**Configuracion del ProxyJump (Opcional)**\*](#configuracion-del-proxyjump-opcional)
   - [Deshabilitar autenticación por contraseña](#deshabilitar-autenticación-por-contraseña)
   - [Elevar privilegios para usuarios `adm01` y `adm02`](#elevar-privilegios-para-usuarios-adm01-y-adm02)
   - [Configuración de diccionario de contraseñas no permitidas](#configuración-de-diccionario-de-contraseñas-no-permitidas)
@@ -34,7 +35,7 @@ ___
 - [**Personalización**](#personalización)
 - [**Inventario de Equipos**](#inventario-de-equipos)
 - [**Inventario de Credenciales Iniciales**](#inventario-de-credenciales-iniciales)
-- [**Pruebas Docuentadas**](#pruebas-docuentadas)
+- [**Pruebas Documentadas**](#pruebas-documentadas)
 - [**Referencias**](#referencias)
 - [**Anexos**](#anexos)
 
@@ -105,12 +106,21 @@ Se deben crear los siguientes 4 equipos con los nombres de servidor, usuario y c
 * Web
 * Base de Datos
 
+Para los equipos `Bastion` y `Web` debe crearse un segundo adaptador de red durante la creación del equipo. Cuando se configure los recursos de la máquina.
+
+Clic botón Add.
+![](img/new-adapter-1.png)
+Seleccionar Network Adapter.
+![](img/new-adapter-2.png)
+
 Unav vez creados los equipos, proceder a realizar la siguiente configuración por cada equipo.
 
 #### Bastion
 
+Ingresamos al equipo con el usuario `psiadmin`.
+
 Editar el archivo `00-installer-config.yaml` para configurar la ip estática 10.0.0.1 en la interfaz `ens33`, el valor dhcp4 cambiará a `no`.
-**Los archivo .yaml deben estar con la identación correcta de 2 espacios y 1 espacio luego del guión.**
+**Los archivos .yaml deben estar con la identación correcta de 2 espacios y 1 espacio luego del guión.**
 ```
 sudo nano /etc/netplan/00-installer-config.yaml
 
@@ -127,7 +137,7 @@ sudo netplan apply
 #### Servidor Web - Wordpress
 
 Editar el archivo `00-installer-config.yaml` para configurar la ip estática 10.0.0.2 en la interfaz `ens33`, el valor dhcp4 cambiará a `no`.
-**Los archivo .yaml deben estar con la identación correcta de 2 espacios y 1 espacio luego del guión.**
+**Los archivos .yaml deben estar con la identación correcta de 2 espacios y 1 espacio luego del guión.**
 ```
 sudo nano /etc/netplan/00-installer-config.yaml
 
@@ -247,7 +257,7 @@ Configuramos la ip estática del servidor.
 #### Servidor Base de Datos - MySQL
 
 Editar el archivo `00-installer-config.yaml` para configurar la ip estática 10.0.0.3 en la interfaz `ens33`, el valor dhcp4 cambiará a `no`.
-**Los archivo .yaml deben estar con la identación correcta de 2 espacios y 1 espacio luego del guión.**
+**Los archivos .yaml deben estar con la identación correcta de 2 espacios y 1 espacio luego del guión.**
 ```
 sudo nano /etc/netplan/00-installer-config.yaml
 
@@ -269,6 +279,7 @@ CREATE DATABASE wordpress;
 CREATE USER 'wordpress'@'%'IDENTIFIED WITH mysql_native_password BY 'psipassword';
 GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';
 FLUSH PRIVILEGES;
+exit
 ```
 
 Entramos al archivo de configuración `mysqld.cnf`
@@ -295,7 +306,7 @@ Se tendrán los siguientes grupos:
 * `databaseadmins`: usuarios para administrar el servidor de base de datos
 * `administrators`: usuarios con permisos de administrador para entrar al servidor web y base de datos
 
-Los grupos deben ser creados en los 3 servidores y la máquina host cliente.
+Los grupos deben ser creados en los 3 servidores y el equuipo cliente externo.
 
 Entrar a los 4 equipos y ejecutar los siguiente comandos
 ```
@@ -369,7 +380,7 @@ ___
 
 ### Autenticación con SSH llave pública y privada
 
-El servidor Bastion funciona como un proxy o bien se le conoce como servidor de salto, en el cual es necesario hacer login para acceder a los servicios en la red privada, la forma de hacer login es por medio del protocolo criptografico SSH 
+El servidor Bastion funciona como un proxy o bien se le conoce como servidor de salto, en el cual es necesario hacer login para acceder a los servicios en la red privada, la forma de hacer login es por medio del protocolo criptografico SSH.
 
 Dado que se requiere facilitar el acceso a los servidores es necesario generar una llave publica y privada para cada usuario y copiarla al servidor Bastion para asi garantizar la autenticidad del usuario.
 
@@ -389,7 +400,7 @@ Entramos al equipo Bastion el cual que nos solicitará la frase configurada ante
 ```
 ssh [usuario]]@[ip-pública-bastion]
 ```
-Al escribir la frase correcta tendremos acceso al servidor, dado que tambien se requiere facilitar el acceso al los servidores internos garantizando la autenticidad del cliente se debe copiar la llave publica hacia los servidores internos, se debe tener en cuenta el rol del usuario al copiar la llave publica ya que los administradores pueden acceder a ambos servicios mientras que los usuarios web solo pueden acceder al servicio web, de la misma manera los DBAs tienen acceso unicamente al servicio de la base de datos.
+Al escribir la frase correcta tendremos acceso al servidor, dado que tambien se requiere facilitar el acceso al los servidores internos garantizando la autenticidad del cliente se debe copiar la llave pública hacia los servidores internos, se debe tener en cuenta el rol del usuario al copiar la llave pública ya que los administradores pueden acceder a ambos servicios mientras que los usuarios web solo pueden acceder al servicio web, de la misma manera los DBAs tienen acceso únicamente al servicio de base de datos.
 ```
 scp -r .ssh/authorized_keys [ususario]@[ip-privada-servicio]:~ 
 ```
@@ -397,17 +408,21 @@ Despues de copiar la llave pública hacemos logout en el cliente y podemos verif
 ```
 ssh -J [ip-pública-bastion] [ip-privada-servicio]
 ```
-La frase secreta configurada anteriormente debera ser ingresada dos veces de forma exitosa ya que la primera vez nos loggeamos en el Bastion y la segunda vez en el servicio deseado
+La frase secreta configurada anteriormente debera ser ingresada dos veces de forma exitosa ya que la primera vez se hace un loguin en Bastion y la segunda vez hacia el servidor deseado.
 
-Configuracion del ProxyJump (Opcional)
+#### **Configuracion del ProxyJump (Opcional)***
 
-Se puede configurar el salto en el servicio de SSH para que sea transparente al usuario
+Se puede configurar el salto en el servicio de SSH para que sea transparente al usuario.
 
-Por cada usuario debemos crear el archivo de configuracion en su carpeta respectiva de SSH
+Por cada usuario debemos crear el archivo de configuracion en su carpeta respectiva de SSH.
 ```
 touch ~/.ssh/config
 ```
 Al crear el archivo lo editamos con nuestro editor de preferencia
+```
+sudo nano ~/.ssh/config
+```
+Agregar en el archivo, por ejemplo `ip-privada-servicio=10.0.0.2`, `ip-pública-bation=192.168.20.222`.
 ```
 Host [ip-privada-servicio]
   ProxyJump [ip-pública-bastion]
@@ -449,11 +464,15 @@ ___
 
 ### Elevar privilegios para usuarios `adm01` y `adm02`
 
-Para poder ejecutar permisos sudo para los usuarios del grupo administrators, debe realizarse la configuración en el archivo /etc/sudoers.
+Para poder ejecutar permisos sudo para los usuarios del grupo `administrators`, debe realizarse la configuración en el archivo `/etc/sudoers`.
 
-En el equipo Bastion, abrir el archivo y en la sección `# Members of the admin group may gain root privileges` agregar la siguiente línea.
+Ingresar a cada equipo con el usuario `psiadmin`, abrir el archivo
 ```
-
+sudo nano /etc/sudoers
+```
+En la sección `# Members of the admin group may gain root privileges` agregar la siguiente línea
+```
+administrators ALL=(ALL:ALL) ALL
 ```
 ___
 
@@ -503,11 +522,11 @@ Guardar cambios con Ctrl+O y salir con Ctrl+X
 
 Verificamos que el archivo fue creado
 ```
-cat commonpasswords.txt
+cat commonpasswords
 ```
 Agregamos el archivo al diccionario de palabras
 ```
-sudo create-cracklib-dict commonpasswords.txt
+sudo create-cracklib-dict commonpasswords
 ```
 Podemos verificar su funcionamiento ejecutando
 ```
@@ -517,7 +536,7 @@ ___
 
 ### Configuración de acceso a servidores por medio de grupos
 
-Los usuarios del grupo webmasters y administrators son los únicos con acceso al servidor web. Utilizando el usuario `adm01` o `adm02`.
+Los usuarios del grupo `webmasters` y `administrators` son los únicos con acceso al servidor web. Utilizando el usuario `psiadmin`.
 
 Entrar al servidor de web.
 ```
@@ -539,7 +558,7 @@ Reiniciamos el servicio de ssh
 sudo systemctl restart sshd
 ```
 
-Los usuarios del grupo databaseadmins y administrators son los únicos con acceso al servidor de base de datos. Utilizando el usuario `adm01` o `adm02`.
+Los usuarios del grupo `databaseadmins` y `administrators` son los únicos con acceso al servidor de base de datos. Utilizando el usuario `psiadmin`.
 
 Entrar al servidor de base de datos.
 ```
@@ -561,7 +580,7 @@ Reiniciamos el servicio de ssh
 sudo systemctl restart sshd
 ```
 
-Los usuarios del grupo administrators son los únicos con acceso a Bastion. Utilizando el usuario `psiadmin`.
+Se permite el acceso al equipo Bastion para todos los grupos, pues cada uno realizará un salto para llegar a su servidor de destino. Utilizando el usuario `psiadmin`.
 
 Entrar al equipo Bastion.
 ```
@@ -574,8 +593,7 @@ sudo nano /etc/ssh/sshd_config
 ```
 Al final del archivo agregar
 ```
-AllowGroups     administrators
-DenyGroups      databaseadmins webmasters
+AllowGroups     administrators databaseadmins webmasters
 ```
 Guardar cambios con Ctrl+O y salir con Ctrl+X
 
@@ -595,6 +613,8 @@ sudo systemctl status {service-name}
 sudo systemctl stop {service-name}
 ```
 
+En el servidor web.
+
 A continuación configurar los permisos sobre el servicio Apache para el grupo `webmasters` y `administrators`
 Entrar a editar el archivo `/etc/sudoers`.
 ```
@@ -611,6 +631,8 @@ En la siguiente línea, agregar el grupo de usuarios que podrá ejecutar las acc
 %webmasters     ALL=(ALL) NOPASSWD:APACHE_SERVICE
 #administrators ALL=(ALL) NOPASSWD:APACHE_SERVICE
 ```
+
+En el servidor de base de datos.
 
 A continuación configurar los permisos sobre el servicio MySQL para el grupo `databaseadmins` y `administrators`
 Entrar a editar el archivo `/etc/sudoers`.
@@ -641,7 +663,7 @@ ___
 
 El servicio `ufw` ya se encuentra instalado por defecto en un Ubuntu Server en estado inactivo.
 
-Se aplicarán las reglas para bloquear todas las solicitudes entrantes y permitir las salientes y activaremos el servicio. Esta configuración debe realizarse en el equipo Bastion, servidor Web y Base de Datos.
+Se aplicarán las reglas para bloquear todas las solicitudes entrantes y permitir las salientes y activaremos el servicio. Esta configuración debe realizarse en el equipo Bastion, servidor Web y Base de Datos utilizando el usuario `psiadmin`.
 ```
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
@@ -649,29 +671,19 @@ sudo ufw default allow outgoing
 sudo ufw enable
 ```
 
-Entramos al equipo Bastion y realizaremos la configuración para que pueda ser accedido únicamente por SSH utilizando el usuario `adm01`.
-```
-adm01@[ip-pública-bastion]
-```
+En Bastion realizaremos la configuración para que pueda ser accedido únicamente por SSH
+
 Permitimos conexión por SSH en el puerto 22
 ```
 sudo ufw allow 22
 ```
 
-Salimos y entramos al servidor web.
-```
-ssh -J adm01@[ip-pública-bastion] 10.0.0.2
-```
-Permitimos conexión al servidor por SSH únicamente al equipo Bastion.
+En el servidor web, permitimos conexión SSH únicamente desde el equipo Bastion.
 ```
 sudo ufw allow from 10.0.0.1 to any port 22
 ```
 
-Salimos y entramos al servidor de base de datos.
-```
-ssh -J adm01@[ip-pública-bastion] 10.0.0.3
-```
-Permitimos conexión al servidor por SSH únicamente al equipo Bastion.
+En el servidor de base de datos, permitimos conexión SSH únicamente desde el equipo Bastion.
 ```
 sudo ufw allow from 10.0.0.1 to any port 22
 ```
@@ -680,6 +692,15 @@ Permitimos el acceso al servicio de base de datos únicamente desde el servidor 
 sudo ufw allow mysql from 10.0.0.2
 ```
 
+***********
+**PENDIENTE ACL**
+***********
+●	Los usuarios pueden editar los archivos de configuración de su ROL:
+○	/etc/mysql o similar para DBs
+○	/etc/apache2 o similar para WEB
+***********
+**PENDIENTE ACL**
+***********
 ___
 ## **Personalización** 
 
@@ -751,8 +772,10 @@ contraseña: psi-dba-02
 ```
 
 ___
-## **Pruebas Docuentadas**
+## **Pruebas Documentadas**
 
+Accceso a servicio Wordpress desde un equipo externo.
+![](img/wordpress.png)
 ___
 ## **Referencias**
 
@@ -778,7 +801,7 @@ ___
 * **MySQL**
   * https://ubuntu.com/server/docs/databases-mysql
   * https://www.linode.com/docs/guides/installing-and-configuring-mysql-on-ubuntu-2004/
-
+* **Configuración IP estática**
+  * https://www.linuxtechi.com/static-ip-address-on-ubuntu-server/
 ___
 ## **Anexos**
-
