@@ -132,9 +132,10 @@ git clone https://github.com/stellez/psi-os-security-project-2.git
 ```
 Entrar a la carpeta de scripts, darle permisos y ejecutar el script `crear-usuarios.sh`
 ```
+cd psi-os-security-project-2
 cd scripts
 sudo chmod 760 crear-usuarios.sh
-./crear-usuarios.sh
+sudo ./crear-usuarios.sh
 ```
 
 ### Instalación de SSH
@@ -505,22 +506,26 @@ Usuario administrador de cada equipo
 
 Cliente Externo
 ```
-usuario: admin
+servername: ubusclient
+usuario: psiadmin
 contraseña: PsiOS2023
 ```
 Bastion
 ```
-usuario: admin
+servername: ubusbastion
+usuario: psiadmin
 contraseña: PsiOS2023bastion
 ```
 Web
 ```
-usuario: admin
+servername: ubusweb
+usuario: psiadmin
 contraseña: PsiOS2023web
 ```
 Base de Datos
 ```
-usuario: admin
+servername: ubusdb
+usuario: psiadmin
 contraseña: PsiOS2023db
 ```
 
