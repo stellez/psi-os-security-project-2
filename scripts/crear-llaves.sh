@@ -6,6 +6,7 @@ su - web01 -c "ssh-keygen -b 4096 -f ~web01/.ssh/id_rsa -N 'Me encanta Linux' & 
 su - web01 -c "printf Host 10.0.0.2\n\tProxyJump $BASTION_HOST > ~/.ssh/config"
 su - web02 -c "ssh-keygen -b 4096 -f ~web02/.ssh/id_rsa -N 'Me encanta Linux'"
 su - web02 -c "ssh-copy-id -o StrictHostKeyChecking=no web02@$BASTION_HOST"
+su - web02 -c "printf Host 10.0.0.2\n\tProxyJump $BASTION_HOST > ~/.ssh/config"
 su - dba01 -c "ssh-keygen -b 4096 -f ~dba01/.ssh/id_rsa -N 'Me encanta Linux'"
 su - dba01 -c "ssh-copy-id -o StrictHostKeyChecking=no dba01@$BASTION_HOST"
 su - dba02 -c "ssh-keygen -b 4096 -f ~dba02/.ssh/id_rsa -N 'Me encanta Linux'"
