@@ -405,7 +405,7 @@ ssh [usuario]]@[ip-pública-bastion]
 ```
 Al escribir la frase correcta tendremos acceso al servidor, dado que tambien se requiere facilitar el acceso al los servidores internos garantizando la autenticidad del cliente se debe copiar la llave pública hacia los servidores internos, se debe tener en cuenta el rol del usuario al copiar la llave pública ya que los administradores pueden acceder a ambos servicios mientras que los usuarios web solo pueden acceder al servicio web, de la misma manera los DBAs tienen acceso únicamente al servicio de base de datos.
 ```
-scp -r .ssh/authorized_keys [ususario]@[ip-privada-servicio]:~ 
+scp -r .ssh/ [ususario]@[ip-privada-servicio]:~ 
 ```
 Despues de copiar la llave pública hacemos logout en el cliente y podemos verificar la conexion hacia los servidores internos
 ```
