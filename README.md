@@ -288,7 +288,7 @@ ___
 
 ### Creación de grupos
 
-Utilizando el usuario `admin` crear los siguientes grupos y usuarios en cada equipo.
+Utilizando el usuario `psiadmin` crear los siguientes grupos y usuarios en cada equipo.
 
 Se tendrán los siguientes grupos:
 * `webmasters`: usuarios para administrar el servidor web
@@ -339,7 +339,7 @@ sudo ./crear-usuarios.sh
 
 ### Instalación de SSH
 
-Utilizando el usuario `admin`.
+Utilizando el usuario `psiadmin`.
 
 Para que los usuarios puedan autenticarse con llave pública y privada debe realizarse la siguiente configuración:
 
@@ -369,7 +369,7 @@ ___
 
 ### Deshabilitar autenticación por contraseña
 
-Utilizando el usuario `admin`.
+Utilizando el usuario `psiadmin`.
 
 Una vez tengamos los servicios de SSH instalados en Bastion, Web Server y Base de Datos, deshabilitaremos la autenticación por medio de contraseña.
 
@@ -463,7 +463,7 @@ Utilizando el usuario `adm01` o `adm02`.
 
 La siguiente configuración debe realizarse en el equipo Bastion ingresando por medio de
 ```
-ssh-copy-id admin@[ip-pública-bastion]
+ssh-copy-id adm01@[ip-pública-bastion]
 ```
 Y en los equipos de web server y base de datos con
 
@@ -561,11 +561,11 @@ Reiniciamos el servicio de ssh
 sudo systemctl restart sshd
 ```
 
-Los usuarios del grupo administrators son los únicos con acceso a Bastion. Utilizando el usuario `admin`.
+Los usuarios del grupo administrators son los únicos con acceso a Bastion. Utilizando el usuario `psiadmin`.
 
 Entrar al equipo Bastion.
 ```
-ssh admin@[IP-PUBLICA-BASTION]
+ssh psiadmin@[IP-PUBLICA-BASTION]
 ```
 
 Entrar al archivo de configuración `/etc/ssh/sshd_config`
@@ -651,7 +651,7 @@ sudo ufw enable
 
 Entramos al equipo Bastion y realizaremos la configuración para que pueda ser accedido únicamente por SSH utilizando el usuario `adm01`.
 ```
-admin@[ip-pública-bastion]
+adm01@[ip-pública-bastion]
 ```
 Permitimos conexión por SSH en el puerto 22
 ```
