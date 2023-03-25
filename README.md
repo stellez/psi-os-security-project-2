@@ -199,9 +199,11 @@ ___
 
 ### Autenticación con SSH llave pública y privada
 
-Cada usuario debe loguearse en el equipo Bastion, generar su llave y copiarla a los servidores que corresponden.
+El servidor Bastion funciona como un proxy o bien se le conoce como servidor de salto, en el cual es necesario hacer login para acceder a los servicios en la red privada, la forma de hacer login es por medio del protocolo criptografico SSH 
 
-Una vez instalados los servicios SSH, procedemos a generar la llavé pública y privada para autenticación.
+Dado que se requiere facilitar el acceso a los servidores es necesario generar una llave publica y privada para cada usuario y copiarla al servidor Bastion para asi garantizar la autenticidad del usuario.
+
+Una vez instalados los servicios SSH, procedemos a generar la llavé pública y privada para la autenticación de los usuarios `adm01`,`adm02`,`web01`,`web02`,`dba01`,`dba02`.
 
 Vamos al equipo Cliente Externo y generamos la llave indicando que será generada con 4096 bits
 ```
@@ -211,52 +213,38 @@ Nos solicitará una frase, la frase debe ser: `Me encanta Linux`
 
 Ahora que tenemos la llave generada, la debemos copiar al equipo Bastion con la ip pública que nos haya asignado la red.
 ```
-ssh-copy-id admin@[ip-pública-bastion]
+ssh-copy-id [usuario]@[ip-pública-bastion]
 ```
-Entramos al equipo Bastion que nos solicitará la frase.
+Entramos al equipo Bastion el cual que nos solicitará la frase configurada anteriormente.
 ```
-ssh admin@[ip-pública-bastion]
+ssh [usuario]]@[ip-pública-bastion]
 ```
-Una vez dentro del equipo Bastion, generaremos la llave pública y privada para conectarnos al servidor web y servidor de base de datos. Se debe generar la llave para los usuarios `adm01`,`adm02`,`web01`,`web02`,`dba01`,`dba02`. El proceso a seguir es iniciar sesión con cada usuario y ejecutar:
+Al escribir la frase correcta tendremos acceso al servidor, dado que tambien se requiere facilitar el acceso al los servidores internos garantizando la autenticidad del cliente se debe copiar la llave publica hacia los servidores internos, se debe tener en cuenta el rol del usuario al copiar la llave publica ya que los administradores pueden acceder a ambos servicios mientras que los usuarios web solo pueden acceder al servicio web, de la misma manera los DBAs tienen acceso unicamente al servicio de la base de datos.
 ```
-ssh-keygen -b 4096
+scp -r .ssh/authorized_keys [ususario]@[ip-privada-servicio]:~ 
 ```
-Nos solicitará una frase, la frase debe ser: `Me encanta Linux`
+Despues de copiar la llave pública hacemos logout en el cliente y podemos verificar la conexion hacia los servidores internos
+```
+ssh -J [ip-pública-bastion] [ip-privada-servicio]
+```
+La frase secreta configurada anteriormente debera ser ingresada dos veces de forma exitosa ya que la primera vez nos loggeamos en el Bastion y la segunda vez en el servicio deseado
 
-Copiamos la llave al servidor web para los usuarios `adm01`,`adm02`,`web01`,`web02`.
-```
-ssh-copy-id admin@10.0.0.2
-```
-Copiamos la llave al servidor de base de datos para los usuarios `adm01`,`adm02`,`dba01`,`dba02`
-```
-ssh-copy-id admin@10.0.0.3
-```
-Probamos conexión a cada servidor el cuál nos solicitará la frase `Me encanta Linux`, una vez dentro salimos del servidor.
+Configuracion del ProxyJump (Opcional)
 
-Web
-```
-ssh web01@10.0.0.2
-# Entre phrase
-exit
-```
+Se puede configurar el salto en el servicio de SSH para que sea transparente al usuario
 
-Base de datos
+Por cada usuario debemos crear el archivo de configuracion en su carpeta respectiva de SSH
 ```
-ssh adm01@10.0.0.3
-# Entre phrase
-exit
+touch ~/.ssh/config
 ```
-
-Estando en el cliente externo, se puede realizar una conexión directa, ya sea al servidor web o al de base de datos con el siguiente comando
-
-Servidor web
+Al crear el archivo lo editamos con nuestro editor de preferencia
 ```
-ssh -J web01@[ip-pública-bastion] 10.0.0.2
+Host [ip-privada-servicio]
+  ProxyJump [ip-pública-bastion]
 ```
-
-Servidor base de datos
+Al guardar la configuracion podemos realizar una conexion por SSH, de la misma manera la frase se debera ingresar dos veces pero facilita no recordar la IP publica del servicio Bastion
 ```
-ssh -J dba01@[ip-pública-bastion] 10.0.0.3
+ssh [ip-privada-servicio]
 ```
 ___
 

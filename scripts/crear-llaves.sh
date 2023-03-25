@@ -1,7 +1,8 @@
 #!/bin/bash
 echo "Ingrese la IP publica del BASTION HOST"
-read
+read REPLY
 BASTION_HOST=$REPLY
+apt install sshpass -y
 su - web01 -c "ssh-keygen -b 4096 -f ~web01/.ssh/id_rsa -N 'Me encanta Linux' & sshpass -p psi-web-01 ssh-copy-id web01@$BASTION_HOST"
 su - web01 -c "printf 'Host 10.0.0.2\n\tProxyJump $BASTION_HOST' >> ~/.ssh/config"
 
