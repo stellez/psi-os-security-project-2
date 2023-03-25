@@ -24,8 +24,8 @@ ___
     - [Servidor Base de Datos - MySQL](#servidor-base-de-datos---mysql)
   - [Creación de grupos](#creación-de-grupos)
   - [Instalación de SSH](#instalación-de-ssh)
-  - [Deshabilitar autenticación por contraseña](#deshabilitar-autenticación-por-contraseña)
   - [Autenticación con SSH llave pública y privada](#autenticación-con-ssh-llave-pública-y-privada)
+  - [Deshabilitar autenticación por contraseña](#deshabilitar-autenticación-por-contraseña)
   - [Elevar privilegios para usuarios `adm01` y `adm02`](#elevar-privilegios-para-usuarios-adm01-y-adm02)
   - [Configuración de diccionario de contraseñas no permitidas](#configuración-de-diccionario-de-contraseñas-no-permitidas)
   - [Configuración de acceso a servidores por medio de grupos](#configuración-de-acceso-a-servidores-por-medio-de-grupos)
@@ -367,35 +367,6 @@ sudo systemctl status ssh
 ```
 ___
 
-### Deshabilitar autenticación por contraseña
-
-Utilizando el usuario `psiadmin`.
-
-Una vez tengamos los servicios de SSH instalados en Bastion, Web Server y Base de Datos, deshabilitaremos la autenticación por medio de contraseña.
-
-En cada servidor deben realizarse las siguientes tareas.
-
-Entrar al archivo sshd_config
-```
-sudo nano /etc/ssh/sshd_config
-```
-Buscar la línea comentada
-```
-#PasswordAuthentication yes
-```
-
-Descomentar la línea y cambiar el valor a `no`
-```
-PasswordAuthentication no
-```
-Guardar cambios con Ctrl+O y salir con Ctrl+X
-
-Reiniciarmos el servicio de SSH
-```
-sudo systemctl restart ssh
-```
-___
-
 ### Autenticación con SSH llave pública y privada
 
 El servidor Bastion funciona como un proxy o bien se le conoce como servidor de salto, en el cual es necesario hacer login para acceder a los servicios en la red privada, la forma de hacer login es por medio del protocolo criptografico SSH 
@@ -444,6 +415,35 @@ Host [ip-privada-servicio]
 Al guardar la configuracion podemos realizar una conexion por SSH, de la misma manera la frase se debera ingresar dos veces pero facilita no recordar la IP publica del servicio Bastion
 ```
 ssh [ip-privada-servicio]
+```
+___
+
+### Deshabilitar autenticación por contraseña
+
+Utilizando el usuario `psiadmin`.
+
+Una vez tengamos los servicios de SSH instalados en Bastion, Web Server y Base de Datos, deshabilitaremos la autenticación por medio de contraseña.
+
+En cada servidor deben realizarse las siguientes tareas.
+
+Entrar al archivo sshd_config
+```
+sudo nano /etc/ssh/sshd_config
+```
+Buscar la línea comentada
+```
+#PasswordAuthentication yes
+```
+
+Descomentar la línea y cambiar el valor a `no`
+```
+PasswordAuthentication no
+```
+Guardar cambios con Ctrl+O y salir con Ctrl+X
+
+Reiniciarmos el servicio de SSH
+```
+sudo systemctl restart ssh
 ```
 ___
 
