@@ -21,6 +21,7 @@ ___
   - [Instalación de SSH](#instalación-de-ssh)
   - [Deshabilitar autenticación por contraseña](#deshabilitar-autenticación-por-contraseña)
   - [Autenticación con SSH llave pública y privada](#autenticación-con-ssh-llave-pública-y-privada)
+  - [Elevar privilegios para usuarios `adm01` y `adm02`](#elevar-privilegios-para-usuarios-adm01-y-adm02)
   - [Configuración de diccionario de contraseñas no permitidas](#configuración-de-diccionario-de-contraseñas-no-permitidas)
   - [Configuración de acceso a servidores por medio de grupos](#configuración-de-acceso-a-servidores-por-medio-de-grupos)
   - [Configuración de ejecución de servicios sin contraseña - `systemctl`](#configuración-de-ejecución-de-servicios-sin-contraseña---systemctl)
@@ -53,6 +54,8 @@ Poner en práctica el uso de herramientas y configuraciones en el sistema operat
 ___
 ## **Alcance Del Proyecto**
 
+
+
 ___
 ## **Audiencia**
 
@@ -67,9 +70,20 @@ Se necesita una infraestructura de 3 equipos con ubuntu server 22.04 para alojar
 ___
 ## **Requerimientos**
 
+Se requiere para la creación de las máquinas virtuales un virtualizador, en este caso podemos utilizar VMWare Workstation.
+* Link de descarga: https://www.vmware.com/latam/products/workstation-pro/workstation-pro-evaluation.html
+
+Se requiere para instalar el sistema operativo una imagen de un Ubuntu Server 22.04
+* Link de descarga: https://ubuntu.com/download/server
+
+Mínimo hardware disponible para cada equipo, siendo 4 en total las que serán creadas:
+* 1GB de RAM
+* 1 CPU
+* 20GB espacio en disco
+
 ___
 ## **Diagrama De Infraestructura**
-![](diagrama.png)
+![](img/diagrama.png)
 ___
 ## **Detalle De Instalación**
 
@@ -83,8 +97,6 @@ Se tendrán los siguientes grupos:
 * `administrators`: usuarios con permisos de administrador para entrar al servidor web y base de datos
 
 Los grupos deben ser creados en los 3 servidores y la máquina host cliente.
-
-Para cada usuario, utilizaremos la contraseña inicial: `[por definir]`
 
 Entrar a los 4 equipos y ejecutar los siguiente comandos
 ```
@@ -120,9 +132,10 @@ git clone https://github.com/stellez/psi-os-security-project-2.git
 ```
 Entrar a la carpeta de scripts, darle permisos y ejecutar el script `crear-usuarios.sh`
 ```
+cd psi-os-security-project-2
 cd scripts
 sudo chmod 760 crear-usuarios.sh
-./crear-usuarios.sh
+sudo ./crear-usuarios.sh
 ```
 
 ### Instalación de SSH
@@ -186,7 +199,7 @@ ___
 
 ### Autenticación con SSH llave pública y privada
 
-Utilizando el usuario `admin`.
+Cada usuario debe loguearse en el equipo Bastion, generar su llave y copiarla a los servidores que corresponden.
 
 Una vez instalados los servicios SSH, procedemos a generar la llavé pública y privada para autenticación.
 
@@ -204,19 +217,17 @@ Entramos al equipo Bastion que nos solicitará la frase.
 ```
 ssh admin@[ip-pública-bastion]
 ```
-Una vez dentro del equipo Bastion, generaremos la llave pública y privada para conectarnos al servidor web y servidor de base de datos.
-
-Ejecutar
+Una vez dentro del equipo Bastion, generaremos la llave pública y privada para conectarnos al servidor web y servidor de base de datos. Se debe generar la llave para los usuarios `adm01`,`adm02`,`web01`,`web02`,`dba01`,`dba02`. El proceso a seguir es iniciar sesión con cada usuario y ejecutar:
 ```
 ssh-keygen -b 4096
 ```
 Nos solicitará una frase, la frase debe ser: `Me encanta Linux`
 
-Copiamos la llave al servidor web
+Copiamos la llave al servidor web para los usuarios `adm01`,`adm02`,`web01`,`web02`.
 ```
 ssh-copy-id admin@10.0.0.2
 ```
-Copiamos la llave al servidor de base de datos
+Copiamos la llave al servidor de base de datos para los usuarios `adm01`,`adm02`,`dba01`,`dba02`
 ```
 ssh-copy-id admin@10.0.0.3
 ```
@@ -224,14 +235,14 @@ Probamos conexión a cada servidor el cuál nos solicitará la frase `Me encanta
 
 Web
 ```
-ssh admin@10.0.0.2
+ssh web01@10.0.0.2
 # Entre phrase
 exit
 ```
 
 Base de datos
 ```
-ssh admin@10.0.0.3
+ssh adm01@10.0.0.3
 # Entre phrase
 exit
 ```
@@ -240,18 +251,28 @@ Estando en el cliente externo, se puede realizar una conexión directa, ya sea a
 
 Servidor web
 ```
-ssh -J [ip-pública-bastion] 10.0.0.2
+ssh -J web01@[ip-pública-bastion] 10.0.0.2
 ```
 
 Servidor base de datos
 ```
-ssh -J [ip-pública-bastion] 10.0.0.3
+ssh -J dba01@[ip-pública-bastion] 10.0.0.3
+```
+___
+
+### Elevar privilegios para usuarios `adm01` y `adm02`
+
+Para poder ejecutar permisos sudo para los usuarios del grupo administrators, debe realizarse la configuración en el archivo /etc/sudoers.
+
+En el equipo Bastion, abrir el archivo y en la sección `# Members of the admin group may gain root privileges` agregar la siguiente línea.
+```
+
 ```
 ___
 
 ### Configuración de diccionario de contraseñas no permitidas
 
-Utilizando el usuario `admin`.
+Utilizando el usuario `adm01` o `adm02`.
 
 La siguiente configuración debe realizarse en el equipo Bastion ingresando por medio de
 ```
@@ -278,7 +299,7 @@ sudo apt-get install libpam-cracklib
 Debemos crear el documento que contendrá el listado de contraseña.
 
 ```
-sudo nano commonpasswords.txt
+sudo nano commonpasswords
 ```
 Agregamos al archivo
 ```
@@ -309,11 +330,11 @@ ___
 
 ### Configuración de acceso a servidores por medio de grupos
 
-Los usuarios del grupo webmasters y administrators son los únicos con acceso al servidor web. Utilizando el usuario `admin`.
+Los usuarios del grupo webmasters y administrators son los únicos con acceso al servidor web. Utilizando el usuario `adm01` o `adm02`.
 
 Entrar al servidor de web.
 ```
-ssh -J [ip-pública-bastion] 10.0.0.2
+ssh -J adm01@[ip-pública-bastion] 10.0.0.2
 ```
 Entrar al archivo de configuración `/etc/ssh/sshd_config`
 ```
@@ -331,11 +352,11 @@ Reiniciamos el servicio de ssh
 sudo systemctl restart sshd
 ```
 
-Los usuarios del grupo databaseadmins y administrators son los únicos con acceso al servidor de base de datos. Utilizando el usuario `admin`.
+Los usuarios del grupo databaseadmins y administrators son los únicos con acceso al servidor de base de datos. Utilizando el usuario `adm01` o `adm02`.
 
 Entrar al servidor de base de datos.
 ```
-ssh -J [ip-pública-bastion] 10.0.0.3
+ssh -J adm01@[ip-pública-bastion] 10.0.0.3
 ```
 Entrar al archivo de configuración `/etc/ssh/sshd_config`
 ```
@@ -353,11 +374,13 @@ Reiniciamos el servicio de ssh
 sudo systemctl restart sshd
 ```
 
+Los usuarios del grupo administrators son los únicos con acceso a Bastion. Utilizando el usuario `admin`.
+
 Entrar al equipo Bastion.
 ```
 ssh admin@[IP-PUBLICA-BASTION]
 ```
-Los usuarios del grupo administrators son los únicos con acceso a Bastion. Utilizando el usuario `admin`.
+
 Entrar al archivo de configuración `/etc/ssh/sshd_config`
 ```
 sudo nano /etc/ssh/sshd_config
@@ -439,7 +462,7 @@ sudo ufw default allow outgoing
 sudo ufw enable
 ```
 
-Entramos al equipo Bastion y realizaremos la configuración para que pueda ser accedido únicamente por SSH utilizando el usuario `admin`.
+Entramos al equipo Bastion y realizaremos la configuración para que pueda ser accedido únicamente por SSH utilizando el usuario `adm01`.
 ```
 admin@[ip-pública-bastion]
 ```
@@ -450,7 +473,7 @@ sudo ufw allow 22
 
 Salimos y entramos al servidor web.
 ```
-ssh -J [ip-pública-bastion] 10.0.0.2
+ssh -J adm01@[ip-pública-bastion] 10.0.0.2
 ```
 Permitimos conexión al servidor por SSH únicamente al equipo Bastion.
 ```
@@ -459,7 +482,7 @@ sudo ufw allow from 10.0.0.1 to any port 22
 
 Salimos y entramos al servidor de base de datos.
 ```
-ssh -J [ip-pública-bastion] 10.0.0.3
+ssh -J adm01@[ip-pública-bastion] 10.0.0.3
 ```
 Permitimos conexión al servidor por SSH únicamente al equipo Bastion.
 ```
@@ -469,7 +492,6 @@ Permitimos el acceso al servicio de base de datos únicamente desde el servidor 
 ```
 sudo ufw allow mysql from 10.0.0.2
 ```
-
 
 ___
 ## **Personalización** 
@@ -484,22 +506,26 @@ Usuario administrador de cada equipo
 
 Cliente Externo
 ```
-usuario: admin
+servername: ubusclient
+usuario: psiadmin
 contraseña: PsiOS2023
 ```
 Bastion
 ```
-usuario: admin
+servername: ubusbastion
+usuario: psiadmin
 contraseña: PsiOS2023bastion
 ```
 Web
 ```
-usuario: admin
+servername: ubusweb
+usuario: psiadmin
 contraseña: PsiOS2023web
 ```
 Base de Datos
 ```
-usuario: admin
+servername: ubusdb
+usuario: psiadmin
 contraseña: PsiOS2023db
 ```
 
