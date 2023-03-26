@@ -799,7 +799,7 @@ setfacl -m g:dbadmins:rw, g:administrators:rw /etc/mysql
 
 Corroboramos que el ACL fue aplicado exitosamente con el comando
 ```
-getfacl /etc/apache2
+getfacl /etc/mysql
 ```
 ___
 ## **Personalización** 
