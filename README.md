@@ -475,7 +475,7 @@ sudo nano /etc/sudoers
 ```
 En la sección `# Members of the admin group may gain root privileges` agregar la siguiente línea
 ```
-administrators ALL=(ALL:ALL) ALL
+%administrators ALL=(ALL) ALL
 ```
 ___
 
