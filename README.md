@@ -670,6 +670,12 @@ sudo ufw default allow outgoing
 sudo ufw enable
 ```
 
+Para verificar el estatus del Firewall puede utilizar cualquiera de estos dos comandos
+```
+sudo ufw status
+sudo ufw status numbered
+```
+
 En Bastion realizaremos la configuración para que pueda ser accedido únicamente por SSH
 
 Permitimos conexión por SSH en el puerto 22
