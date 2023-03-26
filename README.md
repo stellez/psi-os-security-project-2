@@ -279,11 +279,18 @@ sudo mysql -u root
 
 # Dentro de la base de datos
 CREATE DATABASE wordpress;
-CREATE USER 'wordpress'@'%'IDENTIFIED WITH mysql_native_password BY 'psipassword';
+CREATE USER 'wordpress'@'%' IDENTIFIED WITH mysql_native_password BY 'psipassword';
 GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';
 FLUSH PRIVILEGES;
+```
+
+Verificamos los privilegios otorgados con el comando
+```
+SHOW GRANTS FOR 'wordpress'@'%';
 exit
 ```
+
+El usuario wordpress deberia tener permisos de uso junto con los privilegios en la base de datos wordpress
 
 Entramos al archivo de configuración `mysqld.cnf`
 ```
