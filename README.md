@@ -637,7 +637,7 @@ Cmnd_Alias APACHE_SERVICE = /etc/systemctl start apache2,/etc/systemctl restart 
 En la siguiente línea, agregar el grupo de usuarios que podrá ejecutar las acciones configuradas.
 ```
 %webmasters     ALL=(ALL) NOPASSWD:APACHE_SERVICE
-#administrators ALL=(ALL) NOPASSWD:APACHE_SERVICE
+%administrators ALL=(ALL) NOPASSWD:APACHE_SERVICE
 ```
 
 En el servidor de base de datos.
@@ -656,7 +656,7 @@ Cmnd_Alias MYSQL_SERVICE = /etc/systemctl start mysql,/etc/systemctl restart mys
 En la siguiente línea, agregar el grupo de usuarios que podrá ejecutar las acciones configuradas.
 ```
 %databaseadmins ALL=(ALL) NOPASSWD:MYSQL_SERVICE
-#administrators ALL=(ALL) NOPASSWD:MYSQL_SERVICE
+%administrators ALL=(ALL) NOPASSWD:MYSQL_SERVICE
 ```
 Guardar cambios con Ctrl+O y salir con Ctrl+X
 
