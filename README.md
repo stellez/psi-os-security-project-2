@@ -771,15 +771,36 @@ Permitimos el acceso al servicio de base de datos únicamente desde el servidor 
 sudo ufw allow from 10.0.0.2 to any port 3306
 ```
 
-***********
-**PENDIENTE ACL**
-***********
+### ACL
 ●	Los usuarios pueden editar los archivos de configuración de su ROL:
-○	/etc/mysql o similar para DBs
-○	/etc/apache2 o similar para WEB
-***********
-**PENDIENTE ACL**
-***********
+*	/etc/mysql o similar para DBs
+*	/etc/apache2 o similar para WEB
+
+Instalar el paquete de ACL en los servidores web y db
+```
+sudo apt install acl
+```
+
+En el servidor web ejecutar el comando 
+```
+setfacl -m g:webmasters:rw, g:administrators:rw /etc/apache2
+```
+
+Corroboramos que el ACL fue aplicado exitosamente con el comando
+```
+getfacl /etc/apache2
+```
+
+
+En el servidor db ejecutar el comando 
+```
+setfacl -m g:dbadmins:rw, g:administrators:rw /etc/mysql
+```
+
+Corroboramos que el ACL fue aplicado exitosamente con el comando
+```
+getfacl /etc/apache2
+```
 ___
 ## **Personalización** 
 Dado que en la configuración de los sistemas se encuentran algunas tareas que son repetitivas como la creación de usuarios, creación de credenciales, copiar las credenciales a los servidores de la red se crearon scripts especificos para el servidor bastion y el ordenador del cliente y asi automatizar estos procesos repetitivos que pueden ser suceptibles a errores. Los scripts creados para este proyecto se encuentran en la carpeta scripts del repositorioÑ
