@@ -544,12 +544,8 @@ ___
 
 ### Configuración de acceso a servidores por medio de grupos
 
-Los usuarios del grupo `webmasters` y `administrators` son los únicos con acceso al servidor web. Utilizando el usuario `psiadmin`.
+Los usuarios del grupo `webmasters` y `administrators` son los únicos con acceso al servidor web. Configurar en el servidor web con el usuario `psiadmin`.
 
-Entrar al servidor de web.
-```
-ssh -J adm01@[ip-pública-bastion] 10.0.0.2
-```
 Entrar al archivo de configuración `/etc/ssh/sshd_config`
 ```
 sudo nano /etc/ssh/sshd_config
@@ -566,12 +562,8 @@ Reiniciamos el servicio de ssh
 sudo systemctl restart sshd
 ```
 
-Los usuarios del grupo `databaseadmins` y `administrators` son los únicos con acceso al servidor de base de datos. Utilizando el usuario `psiadmin`.
+Los usuarios del grupo `databaseadmins` y `administrators` son los únicos con acceso al servidor de base de datos. Configurar en el servidor de base de datos con el usuario `psiadmin`.
 
-Entrar al servidor de base de datos.
-```
-ssh -J adm01@[ip-pública-bastion] 10.0.0.3
-```
 Entrar al archivo de configuración `/etc/ssh/sshd_config`
 ```
 sudo nano /etc/ssh/sshd_config
@@ -589,11 +581,6 @@ sudo systemctl restart sshd
 ```
 
 Se permite el acceso al equipo Bastion para todos los grupos, pues cada uno realizará un salto para llegar a su servidor de destino. Utilizando el usuario `psiadmin`.
-
-Entrar al equipo Bastion.
-```
-ssh psiadmin@[IP-PUBLICA-BASTION]
-```
 
 Entrar al archivo de configuración `/etc/ssh/sshd_config`
 ```
