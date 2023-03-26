@@ -619,7 +619,7 @@ Navegar hasta encontrar el comentario `#Allow members of group sudo to execute a
 
 Crear una variable para almacenar las acciones que podrán ejecutarse sobre el servicio Apache.
 ```
-Cmnd_Alias APACHE_SERVICE = /etc/systemctl start apache2,/etc/systemctl restart apache2,/etc/systemctl stop apache2,/etc/systemctl status apache2
+Cmnd_Alias APACHE_SERVICE = /usr/bin/systemctl start apache2,/usr/bin/systemctl restart apache2,/usr/bin/systemctl stop apache2,/usr/bin/systemctl status apache2
 ```
 En la siguiente línea, agregar el grupo de usuarios que podrá ejecutar las acciones configuradas.
 ```
@@ -638,7 +638,7 @@ Navegar hasta encontrar el comentario `#Allow members of group sudo to execute a
 
 Crear una variable para almacenar las acciones que podrán ejecutarse sobre el servicio Apache.
 ```
-Cmnd_Alias MYSQL_SERVICE = /etc/systemctl start mysql,/etc/systemctl restart mysql,/etc/systemctl stop mysql,/etc/systemctl status mysql
+Cmnd_Alias MYSQL_SERVICE = /usr/bin/systemctl start mysql,/usr/bin/systemctl restart mysql,/usr/bin/systemctl stop mysql,/usr/bin/systemctl status mysql
 ```
 En la siguiente línea, agregar el grupo de usuarios que podrá ejecutar las acciones configuradas.
 ```
