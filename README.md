@@ -783,7 +783,7 @@ sudo apt install acl
 
 En el servidor web ejecutar el comando 
 ```
-setfacl -m g:webmasters:rw, g:administrators:rw /etc/apache2
+sudo setfacl -R -m g:webmasters:rwx,g:administrators:rwx /etc/apache2
 ```
 
 Corroboramos que el ACL fue aplicado exitosamente con el comando
@@ -794,7 +794,7 @@ getfacl /etc/apache2
 
 En el servidor db ejecutar el comando 
 ```
-setfacl -m g:dbadmins:rw, g:administrators:rw /etc/mysql
+sudo setfacl -R -m g:databaseadmins:rwx,g:administrators:rwx /etc/mysql
 ```
 
 Corroboramos que el ACL fue aplicado exitosamente con el comando
