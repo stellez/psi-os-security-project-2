@@ -17,6 +17,7 @@ ___
 - [**Requerimientos**](#requerimientos)
 - [**Diagrama De Infraestructura**](#diagrama-de-infraestructura)
 - [**Detalle De Instalación**](#detalle-de-instalación)
+  - [**Inventario de Credenciales Iniciales**](#inventario-de-credenciales-iniciales)
   - [Creación de Equipos](#creación-de-equipos)
     - [Bastion](#bastion)
     - [Servidor Web - Wordpress](#servidor-web---wordpress)
@@ -34,7 +35,6 @@ ___
   - [Configuración de Firewall](#configuración-de-firewall)
 - [**Personalización**](#personalización)
 - [**Inventario de Equipos**](#inventario-de-equipos)
-- [**Inventario de Credenciales Iniciales**](#inventario-de-credenciales-iniciales)
 - [**Pruebas Documentadas**](#pruebas-documentadas)
 - [**Referencias**](#referencias)
 - [**Anexos**](#anexos)
@@ -91,6 +91,70 @@ ___
 ![](img/diagrama.png)
 ___
 ## **Detalle De Instalación**
+
+### **Inventario de Credenciales Iniciales**
+
+Retorno a: [Creación de Equipos](#creación-de-equipos)
+
+Detalles para cada servidor.
+* Nombre de servidor.
+* Nombre de usuario.
+* Contraseña.
+
+Cliente Externo
+```
+servername: ubusclient
+usuario: psiadmin
+contraseña: PsiOS2023
+```
+Bastion
+```
+servername: ubusbastion
+usuario: psiadmin
+contraseña: PsiOS2023bastion
+```
+Web
+```
+servername: ubusweb
+usuario: psiadmin
+contraseña: PsiOS2023web
+```
+Base de Datos
+```
+servername: ubusdb
+usuario: psiadmin
+contraseña: PsiOS2023db
+```
+
+Usuarios y grupos
+
+Grupo administrators 
+```
+usuario: adm01
+contraseña: psi-adm-01
+
+usuario: adm02
+contraseña: psi-adm-02
+```
+
+Grupo webmasters 
+```
+usuario: web01
+contraseña: psi-web-01
+
+usuario: web02
+contraseña: psi-web-02
+```
+
+Grupo databaseadmins
+```
+usuario: dba01
+contraseña: psi-dba-01
+
+usuario: dba02
+contraseña: psi-dba-02
+```
+___
 
 ### Creación de Equipos
 
@@ -715,70 +779,7 @@ ___
 ## **Inventario de Equipos**
 
 ___
-## **Inventario de Credenciales Iniciales**
 
-Retorno a: [Creación de Equipos](#creación-de-equipos)
-
-Detalles para cada servidor.
-* Nombre de servidor.
-* Nombre de usuario.
-* Contraseña.
-
-Cliente Externo
-```
-servername: ubusclient
-usuario: psiadmin
-contraseña: PsiOS2023
-```
-Bastion
-```
-servername: ubusbastion
-usuario: psiadmin
-contraseña: PsiOS2023bastion
-```
-Web
-```
-servername: ubusweb
-usuario: psiadmin
-contraseña: PsiOS2023web
-```
-Base de Datos
-```
-servername: ubusdb
-usuario: psiadmin
-contraseña: PsiOS2023db
-```
-
-Usuarios y grupos
-
-Grupo administrators 
-```
-usuario: adm01
-contraseña: psi-adm-01
-
-usuario: adm02
-contraseña: psi-adm-02
-```
-
-Grupo webmasters 
-```
-usuario: web01
-contraseña: psi-web-01
-
-usuario: web02
-contraseña: psi-web-02
-```
-
-Grupo databaseadmins
-```
-usuario: dba01
-contraseña: psi-dba-01
-
-usuario: dba02
-contraseña: psi-dba-02
-```
-
-___
 ## **Pruebas Documentadas**
 
 Accceso a servicio Wordpress desde un equipo externo.
