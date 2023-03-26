@@ -658,6 +658,10 @@ ___
 
 El servicio `ufw` ya se encuentra instalado por defecto en un Ubuntu Server en estado inactivo.
 
+En caso no se encuentre, instalarlo 
+```
+sudo apt install ufw
+```
 Se aplicarán las reglas para bloquear todas las solicitudes entrantes y permitir las salientes y activaremos el servicio. Esta configuración debe realizarse en el equipo Bastion, servidor Web y Base de Datos utilizando el usuario `psiadmin`.
 ```
 sudo ufw default deny incoming
