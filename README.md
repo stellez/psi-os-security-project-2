@@ -70,6 +70,7 @@ Contruir un sitio web capaz de operar en internet, con un sistema gestor de base
 
 ___
 ## **Audiencia**
+Se pretende que el sitio web pueda ser accesado por cualquier usuario en internet proveniente de cualquier país, pero gestionado unicamenete por usuarios autenticados a través de una red privada.
 
 ___
 ## **Definición De La Solución Propuesta**
@@ -781,9 +782,36 @@ sudo ufw allow from 10.0.0.2 to any port 3306
 ***********
 ___
 ## **Personalización** 
+Dado que en la configuración de los sistemas se encuentran algunas tareas que son repetitivas como la creación de usuarios, creación de credenciales, copiar las credenciales a los servidores de la red se crearon scripts especificos para el servidor bastion y el ordenador del cliente y asi automatizar estos procesos repetitivos que pueden ser suceptibles a errores. Los scripts creados para este proyecto se encuentran en la carpeta scripts del repositorioÑ
+
+https://github.com/stellez/psi-os-security-project-2/tree/master/scripts
+
+
+Dado que implica mas trabajo estar consultando la IP pública del servidor bastion para realizar el salto hacia los servidores de interes, se creo una configuración adicional en cada usuario dentro de la carpeta .ssh en el archivo config `.ssh/config` con la cual el salto al servidor bastion es transparente para el usuario y se puede accesar directamente por una conexión de ssh al servidor de interes sin la necesidad de especificar el salto
+
+`ssh 10.0.0.2`
 
 ___
 ## **Inventario de Equipos**
+
+- 4 maquinas con ubuntu server version 22.04 amd64 
+
+Maquina 1 - Web Service
+- Apache
+- Wordpress
+- Firewall UFW
+- SSH
+
+Maquina 2 - Web Service
+- MySQL
+- Firewall UFW
+- SSH
+
+Maquina 3 - Bastion
+- SSH
+
+Maquina 4 - Cliente
+- SSH
 
 ___
 
