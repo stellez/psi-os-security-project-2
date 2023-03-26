@@ -794,23 +794,23 @@ Dado que implica mas trabajo estar consultando la IP pública del servidor basti
 ___
 ## **Inventario de Equipos**
 
-- 4 maquinas con ubuntu server version 22.04 amd64 
+- 4 máquinas con ubuntu server version 22.04 amd64 
 
-Maquina 1 - Web Service
+Máquina 1 - Web Service
 - Apache
 - Wordpress
 - Firewall UFW
 - SSH
 
-Maquina 2 - Web Service
+Máquina 2 - Web Service
 - MySQL
 - Firewall UFW
 - SSH
 
-Maquina 3 - Bastion
+Máquina 3 - Bastion
 - SSH
 
-Maquina 4 - Cliente
+Máquina 4 - Cliente
 - SSH
 
 ___
