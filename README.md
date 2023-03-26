@@ -304,7 +304,7 @@ ___
 
 Utilizando el usuario `psiadmin`.
 
-En el equipo Bastion, servidor web y servidor de base de datos.
+En el equipo Cliente, Bastion, Servidor Web y Servidor de Base de Datos.
 
 Ejecutar el siguiente comando para instalar el módulo `libpam-cracklib`.
 ```
