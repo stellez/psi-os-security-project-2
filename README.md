@@ -477,6 +477,8 @@ En la sección `# Members of the admin group may gain root privileges` agregar l
 ```
 %administrators ALL=(ALL) ALL
 ```
+Guardar cambios con Ctrl+O y salir con Ctrl+X
+
 ___
 
 ### Configuración de diccionario de contraseñas no permitidas
@@ -485,7 +487,7 @@ Utilizando el usuario `adm01` o `adm02`.
 
 La siguiente configuración debe realizarse en el equipo Bastion ingresando por medio de
 ```
-ssh-copy-id adm01@[ip-pública-bastion]
+ssh adm01@[ip-pública-bastion]
 ```
 Y en los equipos de web server y base de datos con
 
