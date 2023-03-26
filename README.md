@@ -41,11 +41,15 @@ ___
 
 
 ## **Introducción**
+La seguridad informatica es uno de los pilares fundamentales del software, ya que al estar conectados a internet, algo muy común hoy en día, ya sea que se cuente con servicios en la nube, de la misma manera ofrecer estos servicios, nos expone a ataques de gobiernos, activistas, personas con interes de obtener reputación, personas que buscan lucrar con la información de las empresas o personas, etc. por lo tanto la seguridad informatica no puede ser tomada a la ligera en especial cuando se trata de resguardar uno de los activos mas valiosos de las personas o empresas el cual es la información.
 
+Con la siguiente implmenteacion se pretende crear un servidor web en el cual la informacion es almacenada en una base de datos la cual puede ser accedida unicamente por el servicio web, ambos servicios pueden ser gestionados únicamente dentro de una red privada a la cual se puede accesar solamente por un servidor bastion identificandose a través del protocolo ssh y una frase que garantiza la autenticidad del usuario, para proteger los servicios se cuenta con un firewall en cada servidor el cual permite el tráfico especifico de lo contrario es bloqueado, existen diferentes formas de vulnerar este sistema como la ingeniera social para obtener la frase secreta y con mallware instalado en alguno de los ordenadores que se conecta a la red se podrian obtener las llaves publicas y privadas para la conexión por ssh, por lo que podemos decir que el sistema es seguro pero no impenetrable y no solo basta con realizar configuraciones para que el sistema sea seguro sino también capacitaciones para evitar ataques de ingeniera social son necesarias, asi mismo el bloqueo de algunos sitios web junto con el bloqueo de dispositivos de almacenamiento es necesario para garantizar una mayor seguridad, cabe destacar que no existe ningun sistema impenetrable y que la seguridad es un proceso y no un producto con esto podemos decir que no basta con tener el mejor equipo de seguridad, también es requerida la correcta configuración e implementacion junto con la constante atualización de los sistemas, políticas de seguridad y procedimientos, dado que las amenazas evolucionan y los ataques se vuelven mas sofisticados es necesario seguirles el ritmo.
+
+Dicho lo anterior se contruyó la siguiente guía para realizar una implementación segura de un sistema que puede ser expuesto a internet y se le puede dar mantenimiento a través de procesos y conexiones seguras
 ___
 ## **Objetivo**
 
-Crear una infraestructura segura de equipos que estarán ejecutando servicios web y de base de datos, que los servicios puedan ser accedidos únicamente por los grupos y usuarios permitidos y bloquear el acceso a cualquier otro usuario.
+Crear una infraestructura segura de equipos que estarán ejecutando servicios web y de base de datos, los servicios puedan ser accedidos y manejados únicamente por los grupos y usuarios definido, mientras se bloquea el acceso al tráfico de la red no permitido o usuario no identificado.
 
 Poner en práctica el uso de herramientas y configuraciones en el sistema operativo para controlar los accesos y bloqueos, tales como:
 
@@ -56,10 +60,13 @@ Poner en práctica el uso de herramientas y configuraciones en el sistema operat
 * MySQL
 * Wordpress
 * Systemctl
+* Apache
+* Grupos y Usuarios
+* ACLs
 
 ___
 ## **Alcance Del Proyecto**
-
+Contruir un sitio web capaz de operar en internet, con un sistema gestor de base de datos aislado, con la capacidad de darle mantenimiento por medio de una red privada a ambos servicios por medio de usuarios especificos que sean autenticados en los sistemas los cuales garantizen la correcta funcionalidad y ejecución del los servicios.
 
 ___
 ## **Audiencia**
