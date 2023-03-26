@@ -683,9 +683,11 @@ Permitimos conexión por SSH en el puerto 22
 sudo ufw allow 22
 ```
 
-En el servidor web, permitimos conexión SSH únicamente desde el equipo Bastion.
+En el servidor web, permitimos conexión SSH únicamente desde el equipo Bastion y permitimos conexión externa al sitio web desde el puerto 80 (http) y 443 (https)
 ```
 sudo ufw allow from 10.0.0.1 to any port 22
+sudo ufw allow http
+sudo ufw allow https
 ```
 
 En el servidor de base de datos, permitimos conexión SSH únicamente desde el equipo Bastion.
