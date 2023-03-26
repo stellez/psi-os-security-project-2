@@ -304,21 +304,7 @@ ___
 
 Utilizando el usuario `psiadmin`.
 
-La siguiente configuración debe realizarse en el equipo Bastion ingresando por medio de
-```
-ssh [ip-pública-bastion]
-```
-Y en los equipos de web server y base de datos con
-
-Servidor web
-```
-ssh -J [ip-pública-bastion] 10.0.0.2
-```
-
-Servidor base de datos
-```
-ssh -J [ip-pública-bastion] 10.0.0.3
-```
+En el equipo Bastion, servidor web y servidor de base de datos.
 
 Ejecutar el siguiente comando para instalar el módulo `libpam-cracklib`.
 ```
