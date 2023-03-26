@@ -22,13 +22,13 @@ ___
     - [Servidor Web - Wordpress](#servidor-web---wordpress)
   - [Instalación Wordpress](#instalación-wordpress)
     - [Servidor Base de Datos - MySQL](#servidor-base-de-datos---mysql)
+  - [Configuración de diccionario de contraseñas no permitidas](#configuración-de-diccionario-de-contraseñas-no-permitidas)
   - [Creación de grupos](#creación-de-grupos)
   - [Instalación de SSH](#instalación-de-ssh)
   - [Autenticación con SSH llave pública y privada](#autenticación-con-ssh-llave-pública-y-privada)
     - [**Configuracion del ProxyJump (Opcional)**\*](#configuracion-del-proxyjump-opcional)
   - [Deshabilitar autenticación por contraseña](#deshabilitar-autenticación-por-contraseña)
   - [Elevar privilegios para usuarios `adm01` y `adm02`](#elevar-privilegios-para-usuarios-adm01-y-adm02)
-  - [Configuración de diccionario de contraseñas no permitidas](#configuración-de-diccionario-de-contraseñas-no-permitidas)
   - [Configuración de acceso a servidores por medio de grupos](#configuración-de-acceso-a-servidores-por-medio-de-grupos)
   - [Configuración de ejecución de servicios sin contraseña - `systemctl`](#configuración-de-ejecución-de-servicios-sin-contraseña---systemctl)
   - [Configuración de Firewall](#configuración-de-firewall)
@@ -300,6 +300,64 @@ sudo systemctl restart mysql
 
 ___
 
+### Configuración de diccionario de contraseñas no permitidas
+
+Utilizando el usuario `psiadmin`.
+
+La siguiente configuración debe realizarse en el equipo Bastion ingresando por medio de
+```
+ssh [ip-pública-bastion]
+```
+Y en los equipos de web server y base de datos con
+
+Servidor web
+```
+ssh -J [ip-pública-bastion] 10.0.0.2
+```
+
+Servidor base de datos
+```
+ssh -J [ip-pública-bastion] 10.0.0.3
+```
+
+Ejecutar el siguiente comando para instalar el módulo `libpam-cracklib`.
+```
+sudo apt-get update
+sudo apt-get install libpam-cracklib
+```
+
+Debemos crear el documento que contendrá el listado de contraseña.
+
+```
+sudo nano commonpasswords
+```
+Agregamos al archivo
+```
+root
+Qwerty
+Qwertyuiop
+Abc123
+654321
+123321
+Password
+P@ssw0rd
+```
+Guardar cambios con Ctrl+O y salir con Ctrl+X
+
+Verificamos que el archivo fue creado
+```
+cat commonpasswords
+```
+Agregamos el archivo al diccionario de palabras
+```
+sudo create-cracklib-dict commonpasswords
+```
+Podemos verificar su funcionamiento ejecutando
+```
+echo "Qwertyuiop" | cracklib-check
+```
+___
+
 ### Creación de grupos
 
 Utilizando el usuario `psiadmin` crear los siguientes grupos y usuarios en cada equipo.
@@ -469,7 +527,17 @@ ___
 
 Para poder ejecutar permisos sudo para los usuarios del grupo `administrators`, debe realizarse la configuración en el archivo `/etc/sudoers`.
 
-Ingresar a cada equipo con el usuario `psiadmin`, abrir el archivo
+Ingresar al servidor web con el usuario `psiadmin`, abrir el archivo
+```
+sudo nano /etc/sudoers
+```
+En la sección `# Members of the admin group may gain root privileges` agregar la siguiente línea
+```
+%administrators ALL=(ALL) ALL
+```
+Guardar cambios con Ctrl+O y salir con Ctrl+X.
+
+Ingresar al servidor de base de datos con el usuario `psiadmin`, abrir el archivo
 ```
 sudo nano /etc/sudoers
 ```
@@ -479,64 +547,6 @@ En la sección `# Members of the admin group may gain root privileges` agregar l
 ```
 Guardar cambios con Ctrl+O y salir con Ctrl+X
 
-___
-
-### Configuración de diccionario de contraseñas no permitidas
-
-Utilizando el usuario `adm01` o `adm02`.
-
-La siguiente configuración debe realizarse en el equipo Bastion ingresando por medio de
-```
-ssh adm01@[ip-pública-bastion]
-```
-Y en los equipos de web server y base de datos con
-
-Servidor web
-```
-ssh -J [ip-pública-bastion] 10.0.0.2
-```
-
-Servidor base de datos
-```
-ssh -J [ip-pública-bastion] 10.0.0.3
-```
-
-Ejecutar el siguiente comando para instalar el módulo `libpam-cracklib`.
-```
-sudo apt-get update
-sudo apt-get install libpam-cracklib
-```
-
-Debemos crear el documento que contendrá el listado de contraseña.
-
-```
-sudo nano commonpasswords
-```
-Agregamos al archivo
-```
-root
-Qwerty
-Qwertyuiop
-Abc123
-654321
-123321
-Password
-P@ssw0rd
-```
-Guardar cambios con Ctrl+O y salir con Ctrl+X
-
-Verificamos que el archivo fue creado
-```
-cat commonpasswords
-```
-Agregamos el archivo al diccionario de palabras
-```
-sudo create-cracklib-dict commonpasswords
-```
-Podemos verificar su funcionamiento ejecutando
-```
-echo "Qwertyuiop" | cracklib-check
-```
 ___
 
 ### Configuración de acceso a servidores por medio de grupos
