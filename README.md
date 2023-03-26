@@ -696,7 +696,7 @@ sudo ufw allow from 10.0.0.1 to any port 22
 ```
 Permitimos el acceso al servicio de base de datos únicamente desde el servidor web.
 ```
-sudo ufw allow mysql from 10.0.0.2
+sudo ufw allow from 10.0.0.2 to any port 3306
 ```
 
 ***********
